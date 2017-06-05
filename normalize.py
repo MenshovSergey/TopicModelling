@@ -109,23 +109,11 @@ def tokenizerS(t):
     return res
 
 
-# f = open("user_ids","w")
-# pickle.dump(user_ids, f)
-# f.close()
-# qw = pickle.load(open("post_ids"))
-
-
 stop_words = get_stop_words('ru')
 builder = CountVectorizer(stop_words=stop_words, tokenizer=lambda text: tokenizerS(text))
 res = builder.fit_transform(docs)
 
 words = builder.get_feature_names()
-
-# res = coo_matrix((len(docs), len(words)), dtype='int64')
-
-# print builder.get_feature_names()
-
-
 
 model = lda.LDA(n_topics=25, n_iter=200, random_state=1)
 model.fit(res)
@@ -135,8 +123,6 @@ data = model.fit_transform(res)
 
 np.save("data25", data)
 
-# q = np.load("data.npy")
-
 topic_word = model.topic_word_
 n_top_words = 8
 vocab = np.array(builder.get_feature_names())
@@ -144,5 +130,3 @@ for i, topic_dist in enumerate(topic_word):
     ind = np.argsort(topic_dist)[:-n_top_words:-1]
     topic_words = vocab[ind]
     print('Topic {}: {}'.format(i, ' '.join(topic_words).encode("utf-8")))
-# np.savetxt("a.txt", res, fmt='%s')
-
